@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <meta charset="utf-8"/>
+
+  <title>Graphics from Kazakhstan</title>
+
+  <!-- meta data -->
+  <meta name="description" content="Some intresting graphics from Kazakhstan because Kazakhstan is the greatest country in the world."/>
+  <meta name="keywords" content="Kazakhstan, graphics"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  
+  <!-- styles -->
+  <link href="./css/normalize.css" rel="stylesheet"/>
+  <style>body{height:100%;width:100%;font-size:16px}path{stroke:#000;stroke-width:2;fill:none}.page__title{text-align:center;font-size:2rem}.graph{text-align:center;margin-bottom:100px}.graph__title{font-size:1.5rem}.tick{font-size:.9rem}.line{fill:none;stroke:#4682b4;stroke-width:3px}.axis{font-weight:100}.text{visibility:hidden;opacity:0;fill:#ed5565;font-weight:100;font-size:1.1rem;transition:all .3s linear}</style>
+  
+  <body class="page">
+    <!-- html markup -->
+    <h1 class="page__title">Gender statistics in Kazakhstan</h1>
+    <section class="graph">
+      <h1 class="graph__title">The proportion of women among the deputies of the Parliament (Majlis)</h1>
+      <div id="women-parliament"></div>
+    </section>
+
+    <section class="graph">
+      <h1 class="graph__title">Maternal mortality</h1>
+      <div id="maternal-mortality"></div>
+    </section>
+
+    <!-- js plugins -->
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/d3.min.js"></script>
+    <script src="./js/app.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "grafkz",
+  "version": "0.0.1",
+  "homepage": "https://github.com/talgautb/grafkz",
+  "authors": [
+    "talgautb <talgautb@yandex.kz>"
+  ],
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.11.*",
+    "normalize.css": "~3.0.2"
+  },
+  "devDependencies": {
+    "d3": "~3.5.5"
+  }
+}

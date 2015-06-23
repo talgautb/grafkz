@@ -1,2 +1,3 @@
 # grafkz
-graphics from Kazakhstan
+
+Visual data - html, css, svg, js

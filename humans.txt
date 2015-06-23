@@ -1,0 +1,17 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+	talgautb -- frontend developer -- @talgautb
+
+# TECHNOLOGY COLOPHON
+
+	HTML5
+	CSS3
+	normalize.css
+	jQuery
+	d3js
+	Gulpjs
+    Bower
+    PostCss

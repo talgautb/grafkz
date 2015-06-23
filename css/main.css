@@ -1,0 +1,49 @@
+body {
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+}
+
+path {
+  stroke: black;
+  stroke-width: 2;
+  fill: none;
+}
+
+.page__title {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.graph {
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.graph__title {
+  font-size: 1.5rem;
+}
+
+.tick {
+  font-size: .9rem;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+.axis {
+  font-weight: 100;
+}
+
+.text {
+  font-weight: 100;
+  visibility: hidden;
+  opacity: 0;
+  fill: #ed5565;
+  font-weight: 100;
+  font-size: 1.1rem;
+  transition: all .3s linear;
+}
