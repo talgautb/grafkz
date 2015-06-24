@@ -41,7 +41,7 @@ $(document).ready(function(){
       .enter().append('rect')
       .style({
         'fill': function(data, i){
-          return colors(i);
+          return '#2b908f'; //colors(i);
         }, 'stroke': '#fff', 'stroke-width': '1'
       })
       .attr('width', xScale.rangeBand())
@@ -57,7 +57,9 @@ $(document).ready(function(){
       .on('mouseover', function(data) {
         dynamicColor = this.style.fill;
         d3.select(this)
-          .style('fill', '#ccc');
+          .style('fill', function(i){
+            return colors(i);
+          });
       })
       .on('mouseout', function(data) {
         d3.select(this)
@@ -161,7 +163,7 @@ $(document).ready(function(){
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.tsv("data.tsv", type, function(error, data) {
+    d3.tsv("women-parliament.tsv", type, function(error, data) {
       x.domain(data.map(function(d) { return d.year; }));
       y.domain([0, d3.max(data, function(d) { return d.pm; })]);
 
@@ -189,12 +191,23 @@ $(document).ready(function(){
           .style("text-anchor", "end")
           .text("‰"); // per mille == ‰
 
+      // add line
+      svg.append('path')
+        .datum(data)
+        .attr('class', 'line')
+        .style({ 'stroke-dasharray': '5'})
+        .attr('d', lineAnimation)
+        .transition()
+          .duration(2000)
+          .attr('d', line)
+          .ease('easeOutQuad');
+
       svg.selectAll(".bar")
           .data(data)
         .enter().append("rect")
           .attr("class", "bar")
           .style({'fill': function(data, i){
-            return colors(i);
+            return '#ccc';// colors(i);
           }, 'opacity': '0.66'})
           .attr("height", function(data) {
             return height - y(data.pm);
@@ -228,8 +241,151 @@ $(document).ready(function(){
 
   }
 
+  // The distribution of the daily time stock
+  function createDayilyTimeStock(){
+
+    var width = 800,
+    height = 450,
+    radius = Math.min(width, height) / 2;
+
+    var color = d3.scale.category10();
+
+    var pie = d3.layout.pie()
+        .value(function(d) { return d.women; })
+        .sort(null);
+
+    var arc = d3.svg.arc()
+        .innerRadius(radius - 100)
+        .outerRadius(radius - 20);
+
+    var svg = d3.select("#daily-time-stock").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+      .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    
+    var outerArc = d3.svg.arc()
+      .innerRadius(radius * 0.9)
+      .outerRadius(radius * 0.9);
+
+    d3.tsv("daily-time-stock.tsv", type, function(error, data) {
+      var path = svg.datum(data).selectAll("path")
+          .data(pie)
+        .enter().append("path")
+          .attr("fill", function(d, i) {
+            console.log(color(i));
+            return color(i); })
+          .attr("d", arc)
+          .attr("data-legend", function(d){
+            return d.data.title;
+          })
+          .each(function(d) { this._current = d; }); // store the initial angles
+
+      d3.selectAll("input")
+        .on("change", change);
+
+      svg.append("g")
+        .attr("class", "labels");
+
+      svg.append("g")
+        .attr("class", "lines");
+
+      function change() {
+        var value = this.value;
+        pie.value(function(d) { return d[value]; }); // change the value function
+        path = path.data(pie); // compute the new angles
+        path.transition().duration(750).attrTween("d", arcTween); // redraw the arcs
+        updateAfterChange(data);
+      }
+
+    updateAfterChange(data, 'women');
+    function updateAfterChange(data){
+        var text = svg.select(".labels").selectAll("text")
+              .data(pie(data));
+
+        text.enter()
+          .append("text")
+          .attr("dy", ".35em")
+          .text(function(d, i) {
+            return d.data.title;
+          });
+
+        function midAngle(d){
+          return d.startAngle + (d.endAngle - d.startAngle)/2;
+        }
+        text.transition().duration(1000)
+          .attrTween("transform", function(d) {
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+              var d2 = interpolate(t);
+              var pos = outerArc.centroid(d2);
+              pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+              return "translate("+ pos +")";
+            };
+          })
+          .styleTween("text-anchor", function(d){
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+              var d2 = interpolate(t);
+              return midAngle(d2) < Math.PI ? "start":"end";
+            };
+          });
+
+        text.exit()
+          .remove();
+
+        var polyline = svg.select(".lines").selectAll("polyline")
+            .data(pie(data));
+          
+        polyline.enter()
+          .append("polyline");
+
+        polyline.transition().duration(1000)
+          .attrTween("points", function(d){
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+              var d2 = interpolate(t);
+              var pos = outerArc.centroid(d2);
+              pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+              return [arc.centroid(d2), outerArc.centroid(d2), pos];
+            };
+          });
+        
+        polyline.exit()
+          .remove();
+      }
+    });
+  
+
+    function type(d) {
+      d.men = +d.men;
+      d.women = +d.women;
+      d.title = d.title;
+      return d;
+    }
+
+    // Store the displayed angles in _current.
+    // Then, interpolate from _current to the new angles.
+    // During the transition, _current is updated in-place by d3.interpolate.
+    function arcTween(a) {
+      var i = d3.interpolate(this._current, a);
+      this._current = i(0);
+      return function(t) {
+        return arc(i(t));
+      };
+    }
+
+  }
+
   // init functions
   womenParliament();
   mm();
+  createDayilyTimeStock();
 
 });

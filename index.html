@@ -12,7 +12,10 @@
   
   <!-- styles -->
   <link href="./css/normalize.css" rel="stylesheet"/>
-  <style>body{height:100%;width:100%;font-size:16px}path{stroke:#000;stroke-width:2;fill:none}.page__title{text-align:center;font-size:2rem}.graph{text-align:center;margin-bottom:100px}.graph__title{font-size:1.5rem}.tick{font-size:.9rem}.line{fill:none;stroke:#4682b4;stroke-width:3px}.axis{font-weight:100}.text{visibility:hidden;opacity:0;fill:#ed5565;font-weight:100;font-size:1.1rem;transition:all .3s linear}</style>
+ 
+  <style>body{height:100%;width:100%;font-size:16px}.domain{stroke:#000;stroke-width:2;fill:none}.page__title{text-align:center;font-size:2rem}.graph{text-align:center;margin-bottom:100px}.graph__title{font-size:1.5rem}.tick{font-size:.9rem}.line{fill:none;stroke:#4682b4;stroke-width:3px}polyline{opacity:.3;stroke:#000;stroke-width:2px;fill:none}.axis{font-weight:100}.text{visibility:hidden;opacity:0;fill:#ed5565;font-weight:100;font-size:1.1rem;transition:all .3s linear}.checker__label{position:relative;margin:0 15px;font-size:1rem;padding:5px 10px;color:#333}.checker__label:hover{cursor:pointer}.checker__input:checked+.checker__label{background:#ffbb78}.checker__input{position:absolute;visibility:hidden;opacity:0}</style>
+
+  <!-- <link href="./css/main.min.css" rel="stylesheet"/> -->
   
   <body class="page">
     <!-- html markup -->
@@ -27,9 +30,22 @@
       <div id="maternal-mortality"></div>
     </section>
 
+    <section class="graph">
+      <h1 class="graph__title">The distribution of the daily time stock</h1>
+      <form>
+        <div class="checker">
+          <input type="radio" class="checker__input" id="men" name="dataset" value="men">
+          <label class="checker__label" for="men">Men</label>
+          <input type="radio" class="checker__input" id="women" name="dataset" value="women" checked>
+          <label class="checker__label" for="women">Women</label>
+        </div>
+      </form>
+      <div id="daily-time-stock"></div>
+    </section>
     <!-- js plugins -->
     <script src="./js/jquery.min.js"></script>
     <script src="./js/d3.min.js"></script>
+    <script src="./js/d3.legend.js"></script>
     <script src="./js/app.min.js"></script>
   </body>
 </html>
